@@ -4,17 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.PostPersist;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -25,8 +23,6 @@ import java.util.UUID;
  *
  * @author jordy jordy.fatigba@theopentrade.com
  */
-@Getter
-@Setter
 @ToString
 @NoArgsConstructor
 @Entity
@@ -35,23 +31,34 @@ import java.util.UUID;
 public class ShrinkedURL
 {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private UUID id ;
+    @Getter @Setter
+    private String id ;
 
+    @Getter @Setter
     @Column(name = "added_at", nullable = false)
     private LocalDateTime addedAt ;
 
+
     @URL
     @NotBlank
+    @Getter @Setter
     @Column(name = "source_url", nullable = false)
     private String sourceUrl ;
 
     /**
      * Ce champ doit contenir la première partie d'un UUID
      */
-    @Column(name = "partial_id", nullable = false, unique = true)
+    @Transient
     private String partialId ;
+
+    public String getPartialId()
+    {
+        if (partialId == null) {
+            this.partialId = this.id.split("-")[0] ;
+        }
+
+        return partialId ;
+    }
 
     @Override
     public boolean equals(Object o)
@@ -70,12 +77,9 @@ public class ShrinkedURL
     }
 
     @PrePersist
-    public void updateAddetAt() {
+    public void beforeInsertion()
+    {
+        this.id = UUID.randomUUID().toString() ;
         this.addedAt = LocalDateTime.now() ;
-    }
-
-    @PostPersist
-    public void updatePartialId() {
-        this.partialId = this.id.toString().split("-")[0] ;
     }
 }
