@@ -6,8 +6,16 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Immutable;
+import org.hibernate.validator.constraints.URL;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.PostPersist;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,6 +42,8 @@ public class ShrinkedURL
     @Column(name = "added_at", nullable = false)
     private LocalDateTime addedAt ;
 
+    @URL
+    @NotBlank
     @Column(name = "source_url", nullable = false)
     private String sourceUrl ;
 
