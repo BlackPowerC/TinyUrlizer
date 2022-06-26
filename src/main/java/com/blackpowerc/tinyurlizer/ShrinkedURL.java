@@ -47,6 +47,12 @@ public class ShrinkedURL
     @Column(name = "source_url", nullable = false)
     private String sourceUrl ;
 
+    /**
+     * Ce champ doit contenir la première partie d'un UUID
+     */
+    @Column(name = "partial_id", nullable = false, unique = true)
+    private String partialId ;
+
     @Override
     public boolean equals(Object o)
     {
@@ -66,5 +72,10 @@ public class ShrinkedURL
     @PrePersist
     public void updateAddetAt() {
         this.addedAt = LocalDateTime.now() ;
+    }
+
+    @PostPersist
+    public void updatePartialId() {
+        this.partialId = this.id.toString().split("-")[0] ;
     }
 }
