@@ -5,5 +5,5 @@ package com.blackpowerc.tinyurlizer;
  *
  * @author jordy jordy.fatigba@theopentrade.com
  */
-public record ShrinkedURLResponse(String shrinkedUrl) {
+public record ShrinkedURLResponse(String shrinkedUrl, String partialId) {
 }
