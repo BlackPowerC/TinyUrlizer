@@ -46,14 +46,14 @@ public class ShrinkedURLService
         return this.repo.saveAndFlush(newShrinked) ;
     }
 
-    public Optional<ShrinkedURL> find(String partialUuid)
+    public Optional<ShrinkedURL> findByPartialId(String partialUuid)
     {
         var probe = new ShrinkedURL() ;
-        probe.setPartialId(partialUuid) ;
+        probe.setId(partialUuid) ;
 
         return this.repo.findOne(
                 Example.of(probe,
-                        ExampleMatcher.matching().withMatcher("partialId",
+                        ExampleMatcher.matching().withMatcher("id",
                                 ExampleMatcher.GenericPropertyMatcher.of(ExampleMatcher.StringMatcher.STARTING)
                         )
                 )
